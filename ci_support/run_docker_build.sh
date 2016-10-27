@@ -24,12 +24,13 @@ show_channel_urls: true
 CONDARC
 )
 
-cat << EOF | docker run -i \
-                        -v ${RECIPE_ROOT}:/recipe_root \
-                        -v ${FEEDSTOCK_ROOT}:/feedstock_root \
-                        -a stdin -a stdout -a stderr \
-                        condaforge/linux-anvil \
-                        bash || exit $?
+ARTEFACTS="$FEEDSTOCK_ROOT/build_artefacts"
+
+test -d "$ARTEFACTS" || mkdir "$ARTEFACTS"
+DONE_CANARY="$ARTEFACTS/conda-forge-build-done"
+rm -f "$DONE_CANARY"
+
+cat << EOF > "$ARTEFACTS/conda-forge-build.sh"
 
 export BINSTAR_TOKEN=${BINSTAR_TOKEN}
 export PYTHONUNBUFFERED=1
@@ -47,4 +48,17 @@ source run_conda_forge_build_setup
     set +x
     conda build /recipe_root --quiet || exit 1
     upload_or_check_non_existence /recipe_root conda-forge --channel=main || exit 1
+# signal build-done with a file to protect against
+# an early exit with status=0 appearing to have succeeded
+touch /feedstock_root/build_artefacts/conda-forge-build-done
 EOF
+
+docker run -i \
+           -v ${RECIPE_ROOT}:/recipe_root \
+           -v ${FEEDSTOCK_ROOT}:/feedstock_root \
+           condaforge/linux-anvil \
+           bash \
+           /feedstock_root/build_artefacts/conda-forge-build.sh || exit $?
+
+# check that the end of the script was reached
+test -f "$DONE_CANARY"
