@@ -78,7 +78,8 @@ requirements:
       then:
         - hypre
     - libhwloc
-    - metis
+    # --with-64-bit-indices option requires a metis build with IDXTYPEWIDTH=64
+    # - metis
     - parmetis
     - libptscotch
     - scalapack

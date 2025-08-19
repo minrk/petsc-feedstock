@@ -96,7 +96,7 @@ python ./configure \
   --with-hwloc=1 \
   --with-openmp=1 \
   --with-hypre=${with_hypre} \
-  --with-metis=1 \
+  --with-metis=0 \
   --with-mpi=1 \
   --with-mumps=1 \
   --with-parmetis=1 \
