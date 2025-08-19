@@ -83,6 +83,7 @@ python ./configure \
   --CXXOPTFLAGS="$CXXFLAGS -O3" \
   --FOPTFLAGS="$FFLAGS -O3" \
   --CUDAOPTFLAGS="-O3" \
+  --with-64-bit-indices \
   --with-clib-autodetect=0 \
   --with-cxxlib-autodetect=0 \
   --with-fortranlib-autodetect=0 \

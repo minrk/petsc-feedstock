@@ -19,9 +19,9 @@ context:
       if with_cuda
       else "0"
     }}
-  # construct the build prefix (e.g. 'cuda12_complex' or 'real')
-  cuda_prefix: ${{ "cuda" + cuda_major + "_" }}
-  build_prefix: ${{ cuda_prefix + scalar if with_cuda else scalar }}
+  # construct the build prefix (e.g. 'cuda12_idx64_complex' or 'idx64_real')
+  cuda_prefix: cuda${{ cuda_major }}_
+  build_prefix: ${{ cuda_prefix if with_cuda else ''}}idx64_${{ scalar }}
 
 package:
   name: petsc
